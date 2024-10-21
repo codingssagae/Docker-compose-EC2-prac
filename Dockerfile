@@ -1,12 +1,10 @@
 FROM openjdk:17-jdk-slim
 
-# wait-for-it 스크립트를 컨테이너로 복사
-COPY wait-for-it.sh /wait-for-it.sh
-RUN chmod +x /wait-for-it.sh
-
-# JAR 파일을 app.jar로 복사
+# JAR_FILE 변수 정의 -> 기본적으로 jar file이 2개이기 때문에 이름을 특정해야함
 ARG JAR_FILE=./build/libs/dockerprac-0.0.1-SNAPSHOT.jar
+
+# JAR 파일 메인 디렉토리에 복사
 COPY ${JAR_FILE} app.jar
 
-# MySQL이 시작될 때까지 대기한 후 애플리케이션 실행
-ENTRYPOINT ["/wait-for-it.sh", "mysql:3306", "--", "java", "-jar", "/app.jar"]
+# 시스템 진입점 정의
+ENTRYPOINT ["java","-jar","/app.jar"]
